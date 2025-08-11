@@ -20,12 +20,12 @@ export default function Walk1() {
         </Text>
       </View>
 
-{/* Next and back Button */}
+      {/* Next and back Button */}
        <View style={styles.btnContainer}> 
 
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>BACK</Text>
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.replace("/")} >
+    <Text style={styles.backButtonText}>BACK</Text>
+  </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={() => router.push("/onboarding/walk2")}>
         <Text style={styles.buttonText}>NEXT</Text>
