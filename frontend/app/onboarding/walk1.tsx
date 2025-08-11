@@ -73,14 +73,16 @@ const styles = StyleSheet.create({
     columnGap: 180
   },
   backButton: {
-
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginBottom: 10,
   },
   button: {
     backgroundColor: "#8875FF",
-    width: "30%",
+    width: "20%",
     paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingHorizontal: 12,
+    marginBottom: 10,
   },
   buttonText: {
     color: "#fff",
