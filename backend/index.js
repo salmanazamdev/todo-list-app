@@ -6,9 +6,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Imported Route Handlers
-const welcome = require('./functions/welcome');
-const signup = require('./functions/auth');
-const login = require('./functions/auth');
+const welcome = require('./functions/welcome/welcome');
+const signup = require('./functions/auth/signup');
+const login = require('./functions/auth/login');
 
 // Basic Route
 app.get('/', loggin, welcome);
