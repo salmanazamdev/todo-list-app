@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 38,
     fontWeight: "bold",
-    color: customGreen,
+    color: "purple",
     marginBottom: 20,
   },
   description: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: customGreen,
+    backgroundColor: "purple",
     width: "70%",
     paddingVertical: 12,
     paddingHorizontal: 40,
