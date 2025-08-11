@@ -1,34 +1,53 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { router } from "expo-router";
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from "react-native";
+import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-
 export default function Login() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
+      <View style={styles.topbox}>
+        {/* Back button */}
+        <TouchableOpacity style={styles.topLeftIcon} onPress={() => router.replace("/onboarding/welcome")}>
+          <Ionicons name="arrow-back" size={26} color="white" />
+        </TouchableOpacity>
 
-      {/* Back button */}
-    <TouchableOpacity style={styles.topLeftIcon} onPress={() => router.replace("/onboarding/welcome")}>
-          <Ionicons name="arrow-back" size={26} color="#fff" />
-    </TouchableOpacity>
-    
-      {/* Heading */}
-      <Text style={styles.title}>Login</Text>
+        {/* Heading */}
+        <Text style={styles.title}>Login</Text>
+      </View>
 
-      {/* Social Buttons */}
-      <TouchableOpacity style={styles.socialBtn}>
-        <Text style={styles.socialText}><Image source={require("@/assets/images/google.png")} style={styles.icon} /> Continue with Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.socialBtn}>
-        <Text style={styles.socialText}><Image source={require("@/assets/images/apple.png")} style={styles.icon} /> Continue with Apple</Text>
+      {/* Username Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        placeholderTextColor="#aaa"
+      />
+
+      {/* Password Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#aaa"
+        secureTextEntry
+      />
+
+      {/* Login Button */}
+      <TouchableOpacity style={styles.loginBtn}>
+        <Text style={styles.loginBtnText}>Login</Text>
       </TouchableOpacity>
 
       {/* Divider */}
       <Text style={styles.orText}>or</Text>
 
-      {/* Phone Login */}
-      <TouchableOpacity style={styles.greenBtn}>
-        <Text style={styles.greenBtnText}>Sign in with Phone Number</Text>
+      {/* Social Buttons */}
+      <TouchableOpacity style={styles.socialBtn}>
+        <Image source={require("@/assets/images/google.png")} style={styles.icon} />
+        <Text style={styles.socialText}>Continue with Google</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.socialBtn}>
+        <Image source={require("@/assets/images/apple.png")} style={styles.icon} />
+        <Text style={styles.socialText}>Continue with Apple</Text>
       </TouchableOpacity>
 
       {/* Bottom Link */}
@@ -40,78 +59,98 @@ export default function Login() {
   );
 }
 
-const customGreen = "#1a974e"; 
+const purple = "#8875FF";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "black",
     alignItems: "center",
     paddingHorizontal: 30,
-    paddingTop: 60,
+    paddingTop: 40,
   },
 
-    image: {
-        width: 200,
-        height: 200,
-        marginBottom: 30,
-    },
+  topbox: {
+    flexDirection: "column",
+    rowGap: 30,
+    fontWeight: "bold",
+    left: -110,
+    color: "#fff",
+    marginTop: 10,
+  },
+
+  topLeftIcon: {},
 
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 30,
-    color: "#000",
+    color: "white",
   },
 
-  socialBtn: {
+  input: {
     width: "100%",
-    backgroundColor: "#f2f2f2",
+    borderWidth: 1,
+    borderColor: purple,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
+    color: "white",
+    marginVertical: 6,
+  },
+
+  loginBtn: {
+    backgroundColor: purple,
+    width: "100%",
     padding: 14,
     borderRadius: 12,
-    marginVertical: 6,
     alignItems: "center",
+    marginTop: 10,
   },
 
-    icon: {
-        width: 20,
-        height: 20,
-        marginRight: 10,
-    },
-    
-  socialText: {
+  loginBtnText: {
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
-    color: "#000",
   },
 
   orText: {
     marginVertical: 20,
     fontSize: 14,
-    color: "#999",
+    color: "#aaa",
   },
 
-  greenBtn: {
-    backgroundColor: customGreen,
+  socialBtn: {
     width: "100%",
+    borderWidth: 1,
+    borderColor: purple,
     padding: 14,
     borderRadius: 12,
+    marginVertical: 6,
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
   },
 
-  greenBtnText: {
-    color: "#fff",
-    fontWeight: "bold",
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+
+  socialText: {
+    fontSize: 16,
+    color: "white",
   },
 
   footerText: {
     marginTop: 20,
     fontSize: 14,
-    color: "#333",
+    color: "white",
   },
 
   link: {
-    color: customGreen,
+    color: purple,
     fontWeight: "bold",
   },
-
 });
