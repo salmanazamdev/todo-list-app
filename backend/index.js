@@ -5,11 +5,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-
 // Imported Route Handlers
-const welcome = require('');
-const signup = require('');
-const login = require('');
+const welcome = require('./functions/welcome');
+const signup = require('./functions/auth');
+const login = require('./functions/auth');
+
+// Basic Route
+app.get('/', loggin, welcome);
+
 
 // Auth Routes
 app.post('/signup', loggin, signup);
