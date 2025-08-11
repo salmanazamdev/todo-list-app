@@ -7,7 +7,7 @@ export default function Walk1() {
       
       {/* Top Image */}
       <Image
-        source={require("@/assets/images/logo.png")}
+        source={require("@/assets/images/walkone.png")}
         style={styles.image}
         resizeMode="contain"
       />
@@ -37,8 +37,9 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   image: {
-    width: 250,
-    height: 250,
+    width: 350,
+    height: 350,
+    marginRight: -20,
     marginTop: 50,
   },
   textContainer: {
@@ -48,16 +49,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 38,
     fontWeight: "bold",
-    color: "purple",
+    color: "#8875FF",
     marginBottom: 20,
   },
   description: {
     fontSize: 16,
-    color: "#555",
+    color: "#8875FF",
     textAlign: "center",
   },
   button: {
-    backgroundColor: "purple",
+    backgroundColor: "#8875FF",
     width: "70%",
     paddingVertical: 12,
     paddingHorizontal: 40,
