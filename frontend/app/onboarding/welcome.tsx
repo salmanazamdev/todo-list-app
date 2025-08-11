@@ -1,10 +1,15 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
 
 export default function Welcome() {
   return (
     <View style={styles.container}>
       
+        <TouchableOpacity style={styles.topLeftIcon} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={26} color="#fff" />
+        </TouchableOpacity>
 
       {/* Title & Description */}
       <View style={styles.textContainer}>
@@ -17,12 +22,12 @@ export default function Welcome() {
       {/* Next and back Button */}
        <View style={styles.btnContainer}> 
 
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back("")} >
-    <Text style={styles.backButtonText}>BACK</Text>
+      <TouchableOpacity style={styles.loginBtn} onPress={() => router.push("/(auth)/login")} >
+    <Text style={styles.backButtonText}>LOGIN</Text>
   </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => router.push("/onboarding/walk3")}>
-        <Text style={styles.buttonText}>NEXT</Text>
+      <TouchableOpacity style={styles.signupBtn} onPress={() => router.push("/(auth)/signup")}>
+        <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
       </TouchableOpacity>
 
       </View>
