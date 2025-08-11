@@ -23,11 +23,11 @@ export default function Welcome() {
        <View style={styles.btnContainer}> 
 
       <TouchableOpacity style={styles.loginBtn} onPress={() => router.push("/(auth)/login")} >
-    <Text style={styles.backButtonText}>LOGIN</Text>
+    <Text style={styles.loginBtnText}>LOGIN</Text>
   </TouchableOpacity>
 
       <TouchableOpacity style={styles.signupBtn} onPress={() => router.push("/(auth)/signup")}>
-        <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
+        <Text style={styles.signupBtnText}>CREATE ACCOUNT</Text>
       </TouchableOpacity>
 
       </View>
@@ -68,29 +68,31 @@ const styles = StyleSheet.create({
   },
     btnContainer: {
     alignItems: "center",
-    flexDirection: "row",
+    flexDirection: "column",
     alignContent: "space-around",
-    columnGap: 180
+
   },
-  backButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    marginBottom: 10,
-  },
-  button: {
+
+  loginBtn: {
     backgroundColor: "#8875FF",
-    width: "20%",
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 132,
     marginBottom: 10,
   },
-  buttonText: {
+    signupBtn: {
+    paddingVertical: 12,
+    paddingHorizontal: 85,
+    marginBottom: 10,
+    borderWidth:2,
+    borderColor: "#8875FF"
+  },
+
+  loginBtnText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
   },
-    backButtonText: {
-    color: "#5e5e5eff",
+    signupBtnText: {
+    color: "white",
     fontSize: 16,
 
   },
