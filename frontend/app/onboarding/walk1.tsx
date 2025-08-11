@@ -28,8 +28,6 @@ export default function Walk1() {
   );
 }
 
-const customGreen = "#1a974eff"; // I picked a color relevant to the theme given the context and declared it as a constant
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
