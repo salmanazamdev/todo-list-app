@@ -9,6 +9,7 @@ app.use(express.json());
 const welcome = require('./functions/welcome/welcome');
 const signup = require('./functions/auth/signup');
 const login = require('./functions/auth/login');
+const loggin = require('./middleware/loggin');
 
 // Basic Route
 app.get('/', loggin, welcome);

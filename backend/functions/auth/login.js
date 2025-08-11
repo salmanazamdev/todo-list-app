@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const pool = require('../database/database');
+const pool = require('../../database/database');
 
 const login = async (req, res) => {
     const { email, password } = req.body;
