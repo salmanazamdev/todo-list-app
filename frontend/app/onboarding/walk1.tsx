@@ -14,16 +14,24 @@ export default function Walk1() {
 
       {/* Title & Description */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Order for Food</Text>
+        <Text style={styles.title}>Manage your tasks</Text>
         <Text style={styles.description}>
-          Browse your favorite meals and order instantly.
+          You can easily manage all of your daily tasks in AchieveIt for free
         </Text>
       </View>
 
-      {/* Next Button */}
-      <TouchableOpacity style={styles.button} onPress={() => router.push("/onboarding/walk2")}>
-        <Text style={styles.buttonText}>Next</Text>
+{/* Next and back Button */}
+       <View style={styles.btnContainer}> 
+
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Text style={styles.backButtonText}>BACK</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/onboarding/walk2")}>
+        <Text style={styles.buttonText}>NEXT</Text>
+      </TouchableOpacity>
+
+      </View>
     </View>
   );
 }
@@ -31,7 +39,7 @@ export default function Walk1() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "black",
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 60,
@@ -47,28 +55,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   title: {
-    fontSize: 38,
+    fontSize: 34,
     fontWeight: "bold",
-    color: "#8875FF",
+    color: "white",
     marginBottom: 20,
+    textAlign: "center"
   },
   description: {
     fontSize: 16,
-    color: "#8875FF",
+    color: "white",
     textAlign: "center",
+  },
+    btnContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    alignContent: "space-around",
+    columnGap: 180
+  },
+  backButton: {
+
   },
   button: {
     backgroundColor: "#8875FF",
-    width: "70%",
+    width: "30%",
     paddingVertical: 12,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginBottom: 40,
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    textAlign: "center",
     fontWeight: "bold",
+  },
+    backButtonText: {
+    color: "#5e5e5eff",
+    fontSize: 16,
+
   },
 });
