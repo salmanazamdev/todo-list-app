@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     btnContainer: {
     alignItems: "center",
     flexDirection: "column",
-    alignContent: "space-around",
+    rowGap: 15
 
   },
 
