@@ -7,7 +7,7 @@ export default function Walk1() {
       
       {/* Top Image */}
       <Image
-        source={require("@/assets/images/plate.png")}
+        source={require("@/assets/images/logo.png")}
         style={styles.image}
         resizeMode="contain"
       />
