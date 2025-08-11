@@ -59,7 +59,6 @@ export default function Login() {
   );
 }
 
-const purple = "#8875FF";
 
 const styles = StyleSheet.create({
   container: {
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     borderWidth: 1,
-    borderColor: purple,
+    borderColor: "#acacacff",
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 14,
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
   },
 
   loginBtn: {
-    backgroundColor: purple,
+    backgroundColor: "#8875FF",
     width: "100%",
     padding: 14,
     borderRadius: 12,
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   },
 
   loginBtnText: {
-    color: "#fff",
+    color: "#d1d1d1ff",
     fontWeight: "bold",
     fontSize: 16,
   },
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
   socialBtn: {
     width: "100%",
     borderWidth: 1,
-    borderColor: purple,
+    borderColor: "#8875FF",
     padding: 14,
     borderRadius: 12,
     marginVertical: 6,
@@ -150,7 +149,7 @@ const styles = StyleSheet.create({
   },
 
   link: {
-    color: purple,
+    color: "#8875FF",
     fontWeight: "bold",
   },
 });
