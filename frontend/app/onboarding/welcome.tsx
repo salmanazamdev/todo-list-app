@@ -43,28 +43,27 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 60,
   },
-  image: {
-    width: 320,
-    height: 320,
-    marginRight: -20,
-    marginTop: 30,
-    marginBottom: -40
-  },
+
+  topLeftIcon: { position: "absolute", top: 30, left: 18, backgroundColor: "#0007", borderRadius: 20, padding: 4 },
+
   textContainer: {
     alignItems: "center",
     paddingHorizontal: 30,
+    marginTop: 35
   },
   title: {
-    fontSize: 34,
+    fontSize: 30,
     fontWeight: "bold",
     color: "white",
     marginBottom: 35,
-    textAlign: "center"
+    textAlign: "center",
+    alignContent: "flex-start"
      },
   description: {
     fontSize: 16,
-    color: "white",
+    color: "#d6d5d5ff",
     textAlign: "center",
+    lineHeight: 27
   },
     btnContainer: {
     alignItems: "center",

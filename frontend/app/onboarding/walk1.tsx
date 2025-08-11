@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: "white",
+    color: "#d6d5d5ff",
     textAlign: "center",
   },
     btnContainer: {
