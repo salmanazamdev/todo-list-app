@@ -13,8 +13,8 @@ CREATE TABLE users (
 CREATE TABLE IF NOT EXISTS tasks (
     task_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
-    task_name VARCHAR(50) NOT NULL,
-    priority INT NOT NULL CHECK (priority >= 1 AND priority <= 5),
+    task_name VARCHAR(150) NOT NULL,
+    priority INT NOT NULL CHECK (priority >= 1 AND priority <= 10),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
