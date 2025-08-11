@@ -14,9 +14,9 @@ export default function Walk2() {
 
       {/* Title & Description */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Manage your tasks</Text>
+        <Text style={styles.title}>Create daily routine</Text>
         <Text style={styles.description}>
-          You can easily manage all of your daily tasks in AchieveIt for free
+          In AchieveIt, you can create your personalized routine to stay productive
         </Text>
       </View>
 
@@ -45,10 +45,11 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   image: {
-    width: 350,
-    height: 350,
+    width: 320,
+    height: 320,
     marginRight: -20,
-    marginTop: 50,
+    marginTop: 30,
+    marginBottom: -40
   },
   textContainer: {
     alignItems: "center",
@@ -58,9 +59,9 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: "bold",
     color: "white",
-    marginBottom: 20,
+    marginBottom: 35,
     textAlign: "center"
-  },
+     },
   description: {
     fontSize: 16,
     color: "white",
