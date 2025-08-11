@@ -1,5 +1,5 @@
 const welcome = (req, res) => {
-    res.send('Welcome to the Salman AchieveIt ToDo List App !');
+    res.send('Welcome to the Salman AchieveIt ToDo List App API !');
 };
 
 module.exports = welcome;
