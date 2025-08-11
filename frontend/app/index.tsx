@@ -8,7 +8,7 @@ const { height } = Dimensions.get("window");
 export default function SplashScreen() {
   useEffect(() => {
     setTimeout(() => {
-      router.replace("/onboarding/welcome");
+      router.replace("/onboarding/walk1");
     }, 2500);
   }, []);
 
