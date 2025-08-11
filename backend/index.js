@@ -20,6 +20,14 @@ app.post('/signup', loggin, signup);
 app.post('/login', loggin, login);
 
 
+// Tasks handlers
+const addTask = require('./functions/tasks/addTask');
+const getTasksByUserId = require('./functions/tasks/getTasksByUserId');
+// Tasks Routes
+app.post('/tasks', loggin, addTask);
+app.get('/tasks/:userId', loggin, getTasksByUserId);
+
+
 // Start the Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
