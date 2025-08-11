@@ -27,7 +27,7 @@ export default function Walk3() {
     <Text style={styles.backButtonText}>BACK</Text>
   </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => router.push("/onboarding/walk3")}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/onboarding/welcome")}>
         <Text style={styles.buttonText}>NEXT</Text>
       </TouchableOpacity>
 
