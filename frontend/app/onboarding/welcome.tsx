@@ -1,22 +1,16 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 
-export default function Walk2() {
+export default function Welcome() {
   return (
     <View style={styles.container}>
       
-      {/* Top Image */}
-      <Image
-        source={require("@/assets/images/walktwo.png")}
-        style={styles.image}
-        resizeMode="contain"
-      />
 
       {/* Title & Description */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Manage your tasks</Text>
+        <Text style={styles.title}>Welcome to AchieveIt</Text>
         <Text style={styles.description}>
-          You can easily manage all of your daily tasks in AchieveIt for free
+          Please login to your account ot create new account to continue
         </Text>
       </View>
 
