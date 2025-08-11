@@ -7,16 +7,16 @@ export default function Walk3() {
       
       {/* Top Image */}
       <Image
-        source={require("@/assets/images/walktwo.png")}
+        source={require("@/assets/images/walkthree.png")}
         style={styles.image}
         resizeMode="contain"
       />
 
       {/* Title & Description */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Manage your tasks</Text>
+        <Text style={styles.title}>Optimize your tasks</Text>
         <Text style={styles.description}>
-          You can easily manage all of your daily tasks in AchieveIt for free
+          You can organuze your daily tasks by adding your tasks into separate categories
         </Text>
       </View>
 
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   title: {
-    fontSize: 34,
+    fontSize: 33,
     fontWeight: "bold",
     color: "white",
     marginBottom: 35,
