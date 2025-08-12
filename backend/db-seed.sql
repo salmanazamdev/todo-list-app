@@ -1,7 +1,7 @@
 -- Seed Users
 INSERT INTO users (username, password)
 VALUES
-  ('essa', 'password'), -- example bcrypt hash
+  ('essa', 'password'), 
   ('hanan', 'password2'),
   ('salman', 'password3');
 
