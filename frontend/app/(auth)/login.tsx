@@ -5,6 +5,35 @@ import { Ionicons } from "@expo/vector-icons";
 export default function Login() {
   const router = useRouter();
 
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Please enter both email and password");
+      return;
+    }
+
+    try {
+  
+
+      const response = await axios.post(`${IP_ADDRESS}/login`, {
+        email,
+        password,
+      });
+
+
+      if (response.status === 200) {
+        await AsyncStorage.setItem('userId', response.data.userId.toString());
+        alert("Login successful!");
+
+        router.push("/(tabs)"); 
+      } else {
+        alert("Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topbox}>
