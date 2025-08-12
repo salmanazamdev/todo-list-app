@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     due_time TIME,
     priority INT NOT NULL CHECK (priority >= 1 AND priority <= 10),
     completed BOOLEAN DEFAULT FALSE,
+    label VARCHAR(30),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
