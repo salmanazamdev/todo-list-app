@@ -82,6 +82,7 @@ export default function Login() {
           <Image source={require("@/assets/images/apple.png")} style={styles.icon} />
           <Text style={styles.socialText}>Login with Apple</Text>
         </TouchableOpacity>
+
       </View>
 
       <View style={styles.footer}>
@@ -166,31 +167,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#aaa",
   },
-  socialBtn: {
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "#8875FF",
-    padding: 14,
-    borderRadius: 8,
-    marginVertical: 6,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "transparent",
-  },
-  icon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
+
+socialBtn: {
+  width: "100%",
+  borderWidth: 1,
+  borderColor: "#8875FF",
+  paddingVertical: 14,
+  borderRadius: 8,
+  marginVertical: 6,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "transparent",
+},
+icon: {
+  width: 20,
+  height: 20,
+  marginRight: 15,
+},
   socialText: {
     fontSize: 16,
     color: "white",
-    alignItems: "center"
   },
   footer: {
     position: "absolute",
     bottom: 30,
-    left: 24,
+    marginHorizontal: 80
   },
   footerText: {
     fontSize: 14,
