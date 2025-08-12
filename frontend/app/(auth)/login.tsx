@@ -9,8 +9,8 @@ import { IP_ADDRESS } from "@/constants/endpoint";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("abc");
+  const [password, setPassword] = useState("abc");
 
   const handleLogin = async () => {
     if (!username || !password) {
