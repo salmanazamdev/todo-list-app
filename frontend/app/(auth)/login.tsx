@@ -79,7 +79,7 @@ export default function Login() {
           <Text style={styles.socialText}>Login with Google</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialBtn}>
-          <Image source={require("@/assets/images/apple.png")} style={styles.icon} />
+          <Image source={require("@/assets/images/applewhite.png")} style={styles.icon} />
           <Text style={styles.socialText}>Login with Apple</Text>
         </TouchableOpacity>
 
