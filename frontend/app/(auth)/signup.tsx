@@ -23,7 +23,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await axios.post(`${IP_ADDRESS}/register`, {
+      const response = await axios.post(`${IP_ADDRESS}/signup`, {
         username,
         password,
       });
@@ -31,7 +31,7 @@ export default function Signup() {
       if (response.status === 201 || response.status === 200) {
         await AsyncStorage.setItem("userId", response.data.userId.toString());
         alert("Registration successful!");
-        router.push("/(tabs)");
+        router.push("/(auth)/login");
       } else {
         alert("Registration failed. Please try again.");
       }
@@ -61,6 +61,7 @@ export default function Signup() {
           placeholderTextColor="#6b6b6bff"
           value={username}
           onChangeText={setUsername}
+          autoCapitalize="none"
         />
 
         <Text style={styles.label}>Password</Text>
@@ -71,6 +72,7 @@ export default function Signup() {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          autoCapitalize="none"
         />
 
         <Text style={styles.label}>Confirm Password</Text>
