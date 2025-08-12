@@ -9,15 +9,15 @@ import { IP_ADDRESS } from "@/constants/endpoint";
 export default function Signup() {
   const router = useRouter();
   const [username, setUsername] = useState("");
-  const [hashedpassword, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = async () => {
-    if (!username || !hashedpassword || !confirmPassword) {
+    if (!username || !password || !confirmPassword) {
       alert("Please fill in all fields");
       return;
     }
-    if (hashedpassword !== confirmPassword) {
+    if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
@@ -25,7 +25,7 @@ export default function Signup() {
     try {
       const response = await axios.post(`${IP_ADDRESS}/signup`, {
         username,
-        hashedpassword,
+        password,
       });
 
       if (response.status === 201 || response.status === 200) {
@@ -70,7 +70,7 @@ export default function Signup() {
           placeholder="****************"
           placeholderTextColor="#6b6b6bff"
           secureTextEntry
-          value={hashedpassword}
+          value={password}
           onChangeText={setPassword}
           autoCapitalize="none"
         />

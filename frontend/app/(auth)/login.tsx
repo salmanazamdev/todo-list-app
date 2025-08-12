@@ -10,17 +10,17 @@ import { IP_ADDRESS } from "@/constants/endpoint";
 export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState("");
-  const [hashedpassword, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    if (!username || !hashedpassword) {
+    if (!username || !password) {
       alert("Please enter both username and password");
       return;
     }
     try {
       const response = await axios.post(`${IP_ADDRESS}/login`, {
         username,
-        hashedpassword,
+        password,
       });
       if (response.status === 200) {
         await AsyncStorage.setItem('userId', response.data.userId.toString());
@@ -61,7 +61,7 @@ export default function Login() {
           placeholder="****************"
           placeholderTextColor="#6b6b6bff"
           secureTextEntry
-          value={hashedpassword}
+          value={password}
           onChangeText={setPassword}
           autoCapitalize="none"
         />
