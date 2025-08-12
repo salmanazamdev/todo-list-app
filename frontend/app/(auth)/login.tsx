@@ -1,12 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 
 export default function Login() {
   const router = useRouter();
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!username || !password) {
       alert("Please enter both email and password");
       return;
     }
@@ -15,7 +16,7 @@ export default function Login() {
   
 
       const response = await axios.post(`${IP_ADDRESS}/login`, {
-        email,
+        username,
         password,
       });
 
@@ -62,7 +63,7 @@ export default function Login() {
       />
 
       {/* Login Button */}
-      <TouchableOpacity style={styles.loginBtn}>
+      <TouchableOpacity style={styles.loginBtn} onPress={handleLogin} >
         <Text style={styles.loginBtnText}>Login</Text>
       </TouchableOpacity>
 
