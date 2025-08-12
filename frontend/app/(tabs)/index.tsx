@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IP_ADDRESS } from "@/constants/endpoint";
 
-const API_URL = "http://localhost:3000"; // Update if needed
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([]);
@@ -22,7 +22,7 @@ export default function HomeScreen() {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) return;
     try {
-      const res = await axios.get(`${API_URL}/tasks/${userId}`);
+      const res = await axios.get(`${IP_ADDRESS}/tasks/${userId}`);
       setTasks(res.data.tasks || []);
     } catch (err) {
       console.error(err);
@@ -37,7 +37,7 @@ export default function HomeScreen() {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId || !title) return;
     try {
-      await axios.post(`${API_URL}/tasks`, {
+      await axios.post(`${IP_ADDRESS}/tasks`, {
         userId,
         title,
         description,
