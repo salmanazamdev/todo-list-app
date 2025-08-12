@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 30,
     paddingTop: 40,
+    
   },
 
   topbox: {
