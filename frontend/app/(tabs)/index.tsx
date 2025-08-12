@@ -1,22 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Platform } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Platform, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IP_ADDRESS } from "@/constants/endpoint";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
+const IP_ADDRESS = "http://localhost:3000"; // Update as needed
+
+const LABEL_COLORS = {
+  University: "#3A82F7",
+  Home: "#F76A6A",
+  Work: "#F7B731",
+};
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState(5);
+  const [priority, setPriority] = useState(1);
+  const [label, setLabel] = useState("University");
   const [dueDate, setDueDate] = useState(new Date());
   const [dueTime, setDueTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showPriorityPicker, setShowPriorityPicker] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("Today");
+  const [completedFilter, setCompletedFilter] = useState("All");
 
   const fetchTasks = async () => {
     const userId = await AsyncStorage.getItem("userId");
@@ -33,19 +46,28 @@ export default function HomeScreen() {
     fetchTasks();
   }, []);
 
-  const handleAddTask = async () => {
+  const handleAddOrUpdateTask = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId || !title) return;
+    const payload = {
+      userId,
+      title,
+      description,
+      dueDate: dueDate.toISOString().split("T")[0],
+      dueTime: dueTime.toTimeString().split(" ")[0],
+      priority,
+      label,
+      completed: false,
+    };
     try {
-      await axios.post(`${IP_ADDRESS}/tasks`, {
-        userId,
-        title,
-        description,
-        dueDate: dueDate.toISOString().split("T")[0],
-        dueTime: dueTime.toTimeString().split(" ")[0],
-        priority,
-      });
+      if (editMode && editingTaskId) {
+        await axios.put(`${IP_ADDRESS}/tasks/${editingTaskId}`, payload);
+      } else {
+        await axios.post(`${IP_ADDRESS}/tasks`, payload);
+      }
       setModalVisible(false);
+      setEditMode(false);
+      setEditingTaskId(null);
       setTitle("");
       setDescription("");
       fetchTasks();
@@ -53,6 +75,36 @@ export default function HomeScreen() {
       console.error(err);
     }
   };
+
+  const handleEditTask = (task) => {
+    setEditMode(true);
+    setEditingTaskId(task.task_id);
+    setTitle(task.title);
+    setDescription(task.description);
+    setPriority(task.priority);
+    setLabel(task.label || "University");
+    setDueDate(task.due_date ? new Date(task.due_date) : new Date());
+    setDueTime(task.due_time ? new Date(`1970-01-01T${task.due_time}`) : new Date());
+    setModalVisible(true);
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await axios.delete(`${IP_ADDRESS}/tasks/${taskId}`);
+      fetchTasks();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Filtering and searching
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase());
+    const matchesCompleted = completedFilter === "All" || (completedFilter === "Completed" ? task.completed : !task.completed);
+    // For demo, filter by today (could be improved)
+    const matchesFilter = filter === "Today" ? true : true;
+    return matchesSearch && matchesCompleted && matchesFilter;
+  });
 
   return (
     <View style={styles.container}>
@@ -64,39 +116,84 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Empty State or Task List */}
-      {tasks.length === 0 ? (
-        <View style={styles.emptyBox}>
-          <Ionicons name="checkbox-outline" size={80} color="#8875FF" />
-          <Text style={styles.emptyText}>What do you want to do today?</Text>
-          <Text style={styles.emptySubText}>Tap + to add your tasks</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={tasks}
-          keyExtractor={item => item.task_id?.toString() || item.id?.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.taskItem}>
-              <Text style={styles.taskTitle}>{item.title}</Text>
-              <Text style={styles.taskDesc}>{item.description}</Text>
-              <Text style={styles.taskMeta}>
-                {item.due_date} {item.due_time} | Priority: {item.priority}
-              </Text>
-            </View>
-          )}
+      {/* Search Bar */}
+      <View style={styles.searchRow}>
+        <Ionicons name="search" size={20} color="#aaa" style={{ marginRight: 8 }} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search for your task..."
+          placeholderTextColor="#aaa"
+          value={search}
+          onChangeText={setSearch}
         />
-      )}
+      </View>
+
+      {/* Filter Row */}
+      <View style={styles.filterRow}>
+        <TouchableOpacity style={styles.filterBtn} onPress={() => setFilter(filter === "Today" ? "All" : "Today")}>
+          <Text style={styles.filterText}>{filter}</Text>
+          <Ionicons name="chevron-down" size={16} color="#aaa" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterBtn} onPress={() => setCompletedFilter(completedFilter === "All" ? "Completed" : "All")}>
+          <Text style={styles.filterText}>{completedFilter}</Text>
+          <Ionicons name="chevron-down" size={16} color="#aaa" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Task List */}
+      <FlatList
+        data={filteredTasks}
+        keyExtractor={item => item.task_id?.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.taskCard}>
+            <View style={styles.taskCardRow}>
+              <TouchableOpacity>
+                <Ionicons name={item.completed ? "checkmark-circle" : "ellipse-outline"} size={22} color={item.completed ? "#8875FF" : "#aaa"} />
+              </TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.taskTitle}>{item.title}</Text>
+                <Text style={styles.taskDesc}>{item.description}</Text>
+                <Text style={styles.taskMeta}>
+                  Today At {item.due_time}
+                </Text>
+              </View>
+              {item.label && (
+                <View style={[styles.labelTag, { backgroundColor: LABEL_COLORS[item.label] || "#333" }]}>
+                  <Text style={styles.labelText}>{item.label}</Text>
+                </View>
+              )}
+              <View style={styles.priorityTag}>
+                <Ionicons name="flag" size={16} color="#8875FF" />
+                <Text style={styles.priorityText}>{item.priority}</Text>
+              </View>
+              <TouchableOpacity onPress={() => handleEditTask(item)}>
+                <Ionicons name="create-outline" size={20} color="#aaa" style={{ marginLeft: 8 }} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteTask(item.task_id)}>
+                <Ionicons name="trash-outline" size={20} color="#F76A6A" style={{ marginLeft: 8 }} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        ListEmptyComponent={
+          <View style={styles.emptyBox}>
+            <Ionicons name="checkbox-outline" size={80} color="#8875FF" />
+            <Text style={styles.emptyText}>What do you want to do today?</Text>
+            <Text style={styles.emptySubText}>Tap + to add your tasks</Text>
+          </View>
+        }
+      />
 
       {/* Add Task Button */}
-      <TouchableOpacity style={styles.addBtn} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity style={styles.addBtn} onPress={() => { setModalVisible(true); setEditMode(false); }}>
         <Ionicons name="add" size={32} color="#fff" />
       </TouchableOpacity>
 
-      {/* Add Task Modal */}
+      {/* Add/Edit Task Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>Add Task</Text>
+            <Text style={styles.modalTitle}>{editMode ? "Edit Task" : "Add Task"}</Text>
             <TextInput
               style={styles.input}
               placeholder="Task Title"
@@ -118,12 +215,15 @@ export default function HomeScreen() {
               <TouchableOpacity onPress={() => setShowTimePicker(true)}>
                 <Ionicons name="alarm-outline" size={24} color="#8875FF" />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowPriorityPicker(true)}>
+                <Ionicons name="flag" size={24} color="#8875FF" />
+                <Text style={{ color: "#fff", marginLeft: 4 }}>{priority}</Text>
+              </TouchableOpacity>
               <TextInput
-                style={[styles.input, { width: 60 }]}
-                placeholder="Priority"
-                value={priority.toString()}
-                onChangeText={v => setPriority(Number(v))}
-                keyboardType="numeric"
+                style={[styles.input, { width: 80 }]}
+                placeholder="Label"
+                value={label}
+                onChangeText={setLabel}
                 placeholderTextColor="#aaa"
               />
             </View>
@@ -151,11 +251,42 @@ export default function HomeScreen() {
                 }}
               />
             )}
+            {/* Priority Picker */}
+            <Modal visible={showPriorityPicker} transparent animationType="fade">
+              <View style={styles.priorityOverlay}>
+                <View style={styles.priorityBox}>
+                  <Text style={styles.modalTitle}>Task Priority</Text>
+                  <View style={styles.priorityGrid}>
+                    {[...Array(10)].map((_, i) => (
+                      <Pressable
+                        key={i + 1}
+                        style={[
+                          styles.priorityCell,
+                          priority === i + 1 && styles.priorityCellActive,
+                        ]}
+                        onPress={() => setPriority(i + 1)}
+                      >
+                        <Ionicons name="flag" size={20} color={priority === i + 1 ? "#fff" : "#8875FF"} />
+                        <Text style={{ color: priority === i + 1 ? "#fff" : "#8875FF", fontWeight: "bold" }}>{i + 1}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                  <View style={styles.modalActions}>
+                    <TouchableOpacity onPress={() => setShowPriorityPicker(false)}>
+                      <Text style={styles.cancelBtn}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.saveBtn} onPress={() => setShowPriorityPicker(false)}>
+                      <Text style={styles.saveBtnText}>Save</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
             <View style={styles.modalActions}>
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <TouchableOpacity onPress={() => { setModalVisible(false); setEditMode(false); }}>
                 <Text style={styles.cancelBtn}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.saveBtn} onPress={handleAddTask}>
+              <TouchableOpacity style={styles.saveBtn} onPress={handleAddOrUpdateTask}>
                 <Text style={styles.saveBtnText}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -176,9 +307,73 @@ const styles = StyleSheet.create({
     backgroundColor: "#181818",
   },
   headerText: { color: "#fff", fontSize: 28, fontWeight: "bold" },
-  emptyBox: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { color: "#fff", fontSize: 20, marginTop: 20 },
-  emptySubText: { color: "#aaa", fontSize: 16, marginTop: 8 },
+  searchRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#232323",
+    borderRadius: 10,
+    marginHorizontal: 18,
+    marginBottom: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  searchInput: {
+    flex: 1,
+    color: "#fff",
+    fontSize: 16,
+  },
+  filterRow: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    marginHorizontal: 18,
+    marginBottom: 10,
+    gap: 12,
+  },
+  filterBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#232323",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginRight: 8,
+  },
+  filterText: { color: "#fff", fontSize: 15, marginRight: 4 },
+  taskCard: {
+    backgroundColor: "#232323",
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 18,
+    marginVertical: 8,
+  },
+  taskCardRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  taskTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  taskDesc: { color: "#aaa", fontSize: 15, marginTop: 4 },
+  taskMeta: { color: "#8875FF", fontSize: 13, marginTop: 6 },
+  labelTag: {
+    backgroundColor: "#3A82F7",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginLeft: 8,
+  },
+  labelText: { color: "#fff", fontSize: 13, fontWeight: "bold" },
+  priorityTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#181818",
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginLeft: 8,
+    borderWidth: 1,
+    borderColor: "#8875FF",
+  },
+  priorityText: { color: "#8875FF", fontWeight: "bold", marginLeft: 2 },
   addBtn: {
     position: "absolute",
     bottom: 32,
@@ -188,6 +383,9 @@ const styles = StyleSheet.create({
     padding: 18,
     elevation: 4,
   },
+  emptyBox: { flex: 1, justifyContent: "center", alignItems: "center" },
+  emptyText: { color: "#fff", fontSize: 20, marginTop: 20 },
+  emptySubText: { color: "#aaa", fontSize: 16, marginTop: 8 },
   modalOverlay: {
     flex: 1,
     backgroundColor: "#000a",
@@ -214,13 +412,38 @@ const styles = StyleSheet.create({
   cancelBtn: { color: "#aaa", fontSize: 16 },
   saveBtn: { backgroundColor: "#8875FF", borderRadius: 8, padding: 10 },
   saveBtnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-  taskItem: {
-    backgroundColor: "#232323",
-    borderRadius: 12,
-    padding: 16,
-    margin: 10,
+  priorityOverlay: {
+    flex: 1,
+    backgroundColor: "#000a",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  taskTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
-  taskDesc: { color: "#aaa", fontSize: 15, marginTop: 4 },
-  taskMeta: { color: "#8875FF", fontSize: 13, marginTop: 6 },
+  priorityBox: {
+    backgroundColor: "#222",
+    borderRadius: 16,
+    padding: 24,
+    width: "80%",
+    elevation: 8,
+  },
+  priorityGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    justifyContent: "center",
+    marginVertical: 12,
+  },
+  priorityCell: {
+    width: 48,
+    height: 48,
+    backgroundColor: "#333",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 4,
+    flexDirection: "column",
+    gap: 2,
+  },
+  priorityCellActive: {
+    backgroundColor: "#8875FF",
+  },
 });
