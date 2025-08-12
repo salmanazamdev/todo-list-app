@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: "center",
     paddingHorizontal: 30,
-    marginTop: 35
+    marginTop: 70,
   },
   title: {
     fontSize: 30,
