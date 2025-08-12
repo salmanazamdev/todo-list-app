@@ -83,6 +83,7 @@ export default function Signup() {
           secureTextEntry
           value={confirmPassword}
           onChangeText={setConfirmPassword}
+          autoCapitalize="none"
         />
 
         <TouchableOpacity style={styles.loginBtn} onPress={handleRegister}>

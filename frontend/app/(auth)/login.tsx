@@ -52,6 +52,7 @@ export default function Login() {
           placeholderTextColor="#6b6b6bff"
           value={username}
           onChangeText={setUsername}
+          autoCapitalize="none"
         />
 
         <Text style={styles.label}>Password</Text>
@@ -62,6 +63,7 @@ export default function Login() {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          autoCapitalize="none"
         />
 
         <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
