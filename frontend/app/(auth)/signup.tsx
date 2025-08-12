@@ -6,28 +6,34 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IP_ADDRESS } from "@/constants/endpoint";
 
-
-export default function Login() {
+export default function Signup() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleLogin = async () => {
-    if (!username || !password) {
-      alert("Please enter both username and password");
+  const handleRegister = async () => {
+    if (!username || !password || !confirmPassword) {
+      alert("Please fill in all fields");
       return;
     }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
     try {
-      const response = await axios.post(`${IP_ADDRESS}/login`, {
+      const response = await axios.post(`${IP_ADDRESS}/register`, {
         username,
         password,
       });
-      if (response.status === 200) {
-        await AsyncStorage.setItem('userId', response.data.userId.toString());
-        alert("Login successful!");
+
+      if (response.status === 201 || response.status === 200) {
+        await AsyncStorage.setItem("userId", response.data.userId.toString());
+        alert("Registration successful!");
         router.push("/(tabs)");
       } else {
-        alert("Login failed. Please try again.");
+        alert("Registration failed. Please try again.");
       }
     } catch (error) {
       console.error(error);
@@ -38,12 +44,15 @@ export default function Login() {
   return (
     <View style={styles.container}>
       {/* Back button */}
-      <TouchableOpacity style={styles.backBtn} onPress={() => router.replace("/onboarding/welcome")}>
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => router.replace("/onboarding/welcome")}
+      >
         <Ionicons name="arrow-back" size={26} color="white" />
       </TouchableOpacity>
 
       <View style={styles.formBox}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>Register</Text>
 
         <Text style={styles.label}>Username</Text>
         <TextInput
@@ -64,8 +73,18 @@ export default function Login() {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text style={styles.loginBtnText}>Login</Text>
+        <Text style={styles.label}>Confirm Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="****************"
+          placeholderTextColor="#6b6b6bff"
+          secureTextEntry
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
+
+        <TouchableOpacity style={styles.loginBtn} onPress={handleRegister}>
+          <Text style={styles.loginBtnText}>Register</Text>
         </TouchableOpacity>
 
         <View style={styles.dividerRow}>
@@ -78,17 +97,19 @@ export default function Login() {
           <Image source={require("@/assets/images/google.png")} style={styles.icon} />
           <Text style={styles.socialText}>Login with Google</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.socialBtn}>
           <Image source={require("@/assets/images/applewhite.png")} style={styles.icon} />
           <Text style={styles.socialText}>Login with Apple</Text>
         </TouchableOpacity>
-
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          Don’t have an account?{" "}
-          <Text style={styles.link} onPress={() => router.push("/(auth)/signup")}>Register</Text>
+          Already have an account?{" "}
+          <Text style={styles.link} onPress={() => router.push("/(auth)/login")}>
+            Login
+          </Text>
         </Text>
       </View>
     </View>
@@ -112,7 +133,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     paddingVertical: 20,
     justifyContent: "center",
-    marginTop: -30
   },
   title: {
     fontSize: 28,
@@ -145,7 +165,7 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 60,
+    marginTop: 30,
   },
   loginBtnText: {
     color: "#fff",
@@ -167,24 +187,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#aaa",
   },
-
-socialBtn: {
-  width: "100%",
-  borderWidth: 1,
-  borderColor: "#8875FF",
-  paddingVertical: 14,
-  borderRadius: 8,
-  marginVertical: 6,
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "transparent",
-},
-icon: {
-  width: 20,
-  height: 20,
-  marginRight: 15,
-},
+  socialBtn: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#8875FF",
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginVertical: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 15,
+  },
   socialText: {
     fontSize: 16,
     color: "white",
