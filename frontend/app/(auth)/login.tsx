@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 60,
   },
   loginBtnText: {
     color: "#fff",
@@ -192,14 +192,14 @@ icon: {
   footer: {
     position: "absolute",
     bottom: 30,
-    marginHorizontal: 80
+    marginHorizontal: 80,
+    marginBottom: 25,
   },
   footerText: {
     fontSize: 14,
-    color: "white",
+    color: "#999999ff",
   },
   link: {
-    color: "#8875FF",
-    fontWeight: "bold",
+    color: "#ffffffff",
   },
 });

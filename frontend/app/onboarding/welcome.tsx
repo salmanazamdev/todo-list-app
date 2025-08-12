@@ -44,8 +44,12 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
 
-  topLeftIcon: { position: "absolute", top: 30, left: 18, backgroundColor: "#0007", borderRadius: 20, padding: 4 },
-
+  topLeftIcon: { 
+    position: "absolute",
+    top: 50,
+    left: 24,
+    zIndex: 2,
+  },
   textContainer: {
     alignItems: "center",
     paddingHorizontal: 30,
