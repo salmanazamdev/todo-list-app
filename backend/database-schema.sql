@@ -12,13 +12,26 @@ CREATE TABLE users (
 CREATE TABLE IF NOT EXISTS tasks (
     task_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
+    category_id INT,
     title VARCHAR(150) NOT NULL,
     description TEXT,
     due_date DATE,
     due_time TIME,
     priority INT NOT NULL CHECK (priority >= 1 AND priority <= 10),
     completed BOOLEAN DEFAULT FALSE,
-    label VARCHAR(30),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);
+
+-- Categories table
+CREATE TABLE IF NOT EXISTS categories (
+    category_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    icon VARCHAR(50),
+    color VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
