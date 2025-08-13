@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Pressable } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import CategoryPicker from "../categories/CategoryPicker";
+import CategoryPicker from "../categories/categoryPicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
