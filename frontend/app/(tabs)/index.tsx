@@ -1,36 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Platform, Pressable } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CategoryPicker from "../categories/categoryPicker";
 
 const IP_ADDRESS = "http://localhost:3000"; // Update as needed
-
-const LABEL_COLORS = {
-  University: "#3A82F7",
-  Home: "#F76A6A",
-  Work: "#F7B731",
-};
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editingTask, setEditingTask] = useState(null);
+
+  // Task fields
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(1);
-  const [label, setLabel] = useState("University");
+  const [category, setCategory] = useState(null);
   const [dueDate, setDueDate] = useState(new Date());
   const [dueTime, setDueTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+
+  // Search/filter
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("Today");
   const [completedFilter, setCompletedFilter] = useState("All");
 
+  // Fetch tasks
   const fetchTasks = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) return;
@@ -46,6 +47,31 @@ export default function HomeScreen() {
     fetchTasks();
   }, []);
 
+  // Open modal for add/edit
+  const openTaskModal = (task = null) => {
+    if (task) {
+      setEditMode(true);
+      setEditingTask(task);
+      setTitle(task.title);
+      setDescription(task.description);
+      setPriority(task.priority);
+      setCategory(task.category_id ? { category_id: task.category_id, name: task.category_name, color: task.category_color } : null);
+      setDueDate(task.due_date ? new Date(task.due_date) : new Date());
+      setDueTime(task.due_time ? new Date(`1970-01-01T${task.due_time}`) : new Date());
+    } else {
+      setEditMode(false);
+      setEditingTask(null);
+      setTitle("");
+      setDescription("");
+      setPriority(1);
+      setCategory(null);
+      setDueDate(new Date());
+      setDueTime(new Date());
+    }
+    setModalVisible(true);
+  };
+
+  // Add or update task
   const handleAddOrUpdateTask = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId || !title) return;
@@ -56,38 +82,23 @@ export default function HomeScreen() {
       dueDate: dueDate.toISOString().split("T")[0],
       dueTime: dueTime.toTimeString().split(" ")[0],
       priority,
-      label,
+      category_id: category?.category_id,
       completed: false,
     };
     try {
-      if (editMode && editingTaskId) {
-        await axios.put(`${IP_ADDRESS}/tasks/${editingTaskId}`, payload);
+      if (editMode && editingTask) {
+        await axios.put(`${IP_ADDRESS}/tasks/${editingTask.task_id}`, payload);
       } else {
         await axios.post(`${IP_ADDRESS}/tasks`, payload);
       }
       setModalVisible(false);
-      setEditMode(false);
-      setEditingTaskId(null);
-      setTitle("");
-      setDescription("");
       fetchTasks();
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleEditTask = (task) => {
-    setEditMode(true);
-    setEditingTaskId(task.task_id);
-    setTitle(task.title);
-    setDescription(task.description);
-    setPriority(task.priority);
-    setLabel(task.label || "University");
-    setDueDate(task.due_date ? new Date(task.due_date) : new Date());
-    setDueTime(task.due_time ? new Date(`1970-01-01T${task.due_time}`) : new Date());
-    setModalVisible(true);
-  };
-
+  // Delete task
   const handleDeleteTask = async (taskId) => {
     try {
       await axios.delete(`${IP_ADDRESS}/tasks/${taskId}`);
@@ -154,19 +165,19 @@ export default function HomeScreen() {
                 <Text style={styles.taskTitle}>{item.title}</Text>
                 <Text style={styles.taskDesc}>{item.description}</Text>
                 <Text style={styles.taskMeta}>
-                  Today At {item.due_time}
+                  {item.due_date} {item.due_time}
                 </Text>
               </View>
-              {item.label && (
-                <View style={[styles.labelTag, { backgroundColor: LABEL_COLORS[item.label] || "#333" }]}>
-                  <Text style={styles.labelText}>{item.label}</Text>
+              {item.category_name && (
+                <View style={[styles.labelTag, { backgroundColor: item.category_color || "#333" }]}>
+                  <Text style={styles.labelText}>{item.category_name}</Text>
                 </View>
               )}
               <View style={styles.priorityTag}>
                 <Ionicons name="flag" size={16} color="#8875FF" />
                 <Text style={styles.priorityText}>{item.priority}</Text>
               </View>
-              <TouchableOpacity onPress={() => handleEditTask(item)}>
+              <TouchableOpacity onPress={() => openTaskModal(item)}>
                 <Ionicons name="create-outline" size={20} color="#aaa" style={{ marginLeft: 8 }} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDeleteTask(item.task_id)}>
@@ -185,7 +196,7 @@ export default function HomeScreen() {
       />
 
       {/* Add Task Button */}
-      <TouchableOpacity style={styles.addBtn} onPress={() => { setModalVisible(true); setEditMode(false); }}>
+      <TouchableOpacity style={styles.addBtn} onPress={() => openTaskModal()}>
         <Ionicons name="add" size={32} color="#fff" />
       </TouchableOpacity>
 
@@ -219,13 +230,11 @@ export default function HomeScreen() {
                 <Ionicons name="flag" size={24} color="#8875FF" />
                 <Text style={{ color: "#fff", marginLeft: 4 }}>{priority}</Text>
               </TouchableOpacity>
-              <TextInput
-                style={[styles.input, { width: 80 }]}
-                placeholder="Label"
-                value={label}
-                onChangeText={setLabel}
-                placeholderTextColor="#aaa"
-              />
+              <TouchableOpacity onPress={() => setShowCategoryPicker(true)}>
+                <View style={[styles.catBox, { backgroundColor: category?.color || "#333" }]}>
+                  <Text style={{ color: "#181818", fontWeight: "bold" }}>{category?.name || "Category"}</Text>
+                </View>
+              </TouchableOpacity>
             </View>
             {/* Date Picker */}
             {showDatePicker && (
@@ -251,6 +260,15 @@ export default function HomeScreen() {
                 }}
               />
             )}
+            {/* Category Picker */}
+            <CategoryPicker
+              visible={showCategoryPicker}
+              onSelect={cat => {
+                setCategory(cat);
+                setShowCategoryPicker(false);
+              }}
+              onClose={() => setShowCategoryPicker(false)}
+            />
             {/* Priority Picker */}
             <Modal visible={showPriorityPicker} transparent animationType="fade">
               <View style={styles.priorityOverlay}>
@@ -283,7 +301,7 @@ export default function HomeScreen() {
               </View>
             </Modal>
             <View style={styles.modalActions}>
-              <TouchableOpacity onPress={() => { setModalVisible(false); setEditMode(false); }}>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Text style={styles.cancelBtn}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.saveBtn} onPress={handleAddOrUpdateTask}>
@@ -355,13 +373,12 @@ const styles = StyleSheet.create({
   taskDesc: { color: "#aaa", fontSize: 15, marginTop: 4 },
   taskMeta: { color: "#8875FF", fontSize: 13, marginTop: 6 },
   labelTag: {
-    backgroundColor: "#3A82F7",
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
     marginLeft: 8,
   },
-  labelText: { color: "#fff", fontSize: 13, fontWeight: "bold" },
+  labelText: { color: "#181818", fontSize: 13, fontWeight: "bold" },
   priorityTag: {
     flexDirection: "row",
     alignItems: "center",
@@ -408,6 +425,13 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   row: { flexDirection: "row", alignItems: "center", marginVertical: 8, gap: 12 },
+  catBox: {
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginLeft: 8,
+    backgroundColor: "#333",
+  },
   modalActions: { flexDirection: "row", justifyContent: "flex-end", marginTop: 18, gap: 18 },
   cancelBtn: { color: "#aaa", fontSize: 16 },
   saveBtn: { backgroundColor: "#8875FF", borderRadius: 8, padding: 10 },
