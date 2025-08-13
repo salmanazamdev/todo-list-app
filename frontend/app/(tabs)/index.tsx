@@ -5,8 +5,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CategoryPicker from "../categories/categoryPicker";
-
-const IP_ADDRESS = "http://localhost:3000"; // Update as needed
+import { IP_ADDRESS } from "../../constants/endpoint"; // Use your constant
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([]);
@@ -112,7 +111,6 @@ export default function HomeScreen() {
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase());
     const matchesCompleted = completedFilter === "All" || (completedFilter === "Completed" ? task.completed : !task.completed);
-    // For demo, filter by today (could be improved)
     const matchesFilter = filter === "Today" ? true : true;
     return matchesSearch && matchesCompleted && matchesFilter;
   });
@@ -195,10 +193,12 @@ export default function HomeScreen() {
         }
       />
 
-      {/* Add Task Button */}
-      <TouchableOpacity style={styles.addBtn} onPress={() => openTaskModal()}>
-        <Ionicons name="add" size={32} color="#fff" />
-      </TouchableOpacity>
+      {/* Add Task Button (only show when modal is not open) */}
+      {!modalVisible && (
+        <TouchableOpacity style={styles.addBtn} onPress={() => openTaskModal()}>
+          <Ionicons name="add" size={32} color="#fff" />
+        </TouchableOpacity>
+      )}
 
       {/* Add/Edit Task Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
@@ -260,7 +260,7 @@ export default function HomeScreen() {
                 }}
               />
             )}
-            {/* Category Picker */}
+            {/* Category Picker (inside the modal, not as a root modal) */}
             <CategoryPicker
               visible={showCategoryPicker}
               onSelect={cat => {
