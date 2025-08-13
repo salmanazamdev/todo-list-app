@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS categories (
     category_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
-    icon VARCHAR(50),
     color VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
