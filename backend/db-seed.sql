@@ -6,7 +6,7 @@ VALUES
   ('salman', 'password3');
 
 -- Seed Tasks
-INSERT INTO tasks (user_id, title, description, due_date, due_time, priority, completed)
+INSERT INTO tasks (user_id, category_id title, description, due_date, due_time, priority, completed)
 VALUES
   (1, 'Finish project report', 'Write and review the final project report for submission', '2025-08-15', '14:00', 8, false),
   (1, 'Buy groceries', 'Milk, eggs, bread, and coffee', '2025-08-13', '17:30', 5, false),
