@@ -37,7 +37,7 @@ const addCategory = require('./functions/categories/addCategory');
 const getCategories = require('./functions/categories/getCategories');
 
 app.post('/categories', loggin, addCategory);
-app.get('/categories/:userId', loggin, getCategories);
+app.get('/categories', loggin, getCategories);
 
 // Start the Server
 app.listen(PORT, () => {
