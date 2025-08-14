@@ -28,10 +28,10 @@ CREATE TABLE IF NOT EXISTS tasks (
 -- Categories table
 CREATE TABLE IF NOT EXISTS categories (
     category_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     color VARCHAR(20),
+    image_url VARCHAR(255),
+    category_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
