@@ -7,16 +7,16 @@ VALUES
 
 -- Seed Categories (global only)
 INSERT INTO categories (name, color, image_url, category_description) VALUES
-('Grocery', '#D9E76C', 'https://cdn-icons-png.flaticon.com/128/3075/3075977.png', 'Grocery shopping and essentials.'),
-('Work', '#6CE7C2', 'https://cdn-icons-png.flaticon.com/128/6978/6978255.png', 'Work and office tasks.'),
-('Sport', '#6CB8E7', 'https://cdn-icons-png.flaticon.com/128/3041/3041130.png', 'Sports and fitness activities.'),
-('Design', '#6C7AE7', 'https://cdn-icons-png.flaticon.com/128/1046/1046769.png', 'Design and creative work.'),
-('University', '#B96CE7', 'https://cdn-icons-png.flaticon.com/128/2153/2153786.png', 'University and study tasks.'),
-('Social', '#E76CB9', 'https://cdn-icons-png.flaticon.com/128/4465/4465242.png', 'Social and community events.'),
-('Music', '#E76C6C', 'https://cdn-icons-png.flaticon.com/128/2405/2405479.png', 'Music and practice.'),
-('Health', '#E7B96C', 'https://cdn-icons-png.flaticon.com/128/3014/3014502.png', 'Health and wellness.'),
-('Movie', '#6CE77A', 'https://cdn-icons-png.flaticon.com/128/5787/5787330.png', 'Movies and entertainment.'),
-('Home', '#6CE7E7', 'https://cdn-icons-png.flaticon.com/128/8688/8688560.png', 'Home and family tasks.');
+('Grocery', '#D9E76C', 'https://cdn-icons-png.flaticon.com/128/3514/3514211.png', 'Grocery shopping and essentials.'),
+('Work', '#6CE7C2', 'https://cdn-icons-png.flaticon.com/128/3281/3281307.png', 'Work and office tasks.'),
+('Sport', '#6CB8E7', 'https://cdn-icons-png.flaticon.com/128/5540/5540420.png', 'Sports and fitness activities.'),
+('Design', '#6C7AE7', 'https://cdn-icons-png.flaticon.com/128/3199/3199899.png', 'Design and creative work.'),
+('University', '#B96CE7', 'https://cdn-icons-png.flaticon.com/128/8074/8074800.png', 'University and study tasks.'),
+('Social', '#E76CB9', 'https://cdn-icons-png.flaticon.com/128/18509/18509485.png', 'Social and community events.'),
+('Music', '#E76C6C', 'https://cdn-icons-png.flaticon.com/128/3659/3659784.png', 'Music and practice.'),
+('Health', '#E7B96C', 'https://cdn-icons-png.flaticon.com/128/2382/2382533.png', 'Health and wellness.'),
+('Movie', '#6CE77A', 'https://cdn-icons-png.flaticon.com/128/4221/4221484.png', 'Movies and entertainment.'),
+('Home', '#6CE7E7', 'https://cdn-icons-png.flaticon.com/128/619/619153.png', 'Home and family tasks.');
 
 -- Seed Tasks (fix columns: add category_id)
 INSERT INTO tasks (user_id, category_id, title, description, due_date, due_time, priority, completed)
