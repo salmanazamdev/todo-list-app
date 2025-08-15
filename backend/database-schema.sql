@@ -8,6 +8,17 @@ CREATE TABLE users (
     deleted_at TIMESTAMP DEFAULT NULL
 );
 
+-- Categories table
+CREATE TABLE IF NOT EXISTS categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    color VARCHAR(20),
+    image_url VARCHAR(255),
+    category_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Tasks table
 CREATE TABLE IF NOT EXISTS tasks (
     task_id SERIAL PRIMARY KEY,
@@ -25,13 +36,3 @@ CREATE TABLE IF NOT EXISTS tasks (
     FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
--- Categories table
-CREATE TABLE IF NOT EXISTS categories (
-    category_id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    color VARCHAR(20),
-    image_url VARCHAR(255),
-    category_description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
