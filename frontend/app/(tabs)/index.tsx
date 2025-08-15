@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, Modal, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
-import { IP_ADDRESS } from "@/constants/endpoint";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import CategoryPicker from "../categories/categoryPicker";
+import { IP_ADDRESS } from "../../constants/endpoint";
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([]);
@@ -19,6 +20,9 @@ export default function HomeScreen() {
   const [category, setCategory] = useState(null);
   const [dueDate, setDueDate] = useState(new Date());
   const [dueTime, setDueTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showPriorityPicker, setShowPriorityPicker] = useState(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   // Search/filter
@@ -50,12 +54,7 @@ export default function HomeScreen() {
       setTitle(task.title);
       setDescription(task.description);
       setPriority(task.priority);
-      setCategory(task.category_id ? {
-        category_id: task.category_id,
-        name: task.category_name,
-        color: task.category_color,
-        image_url: task.category_image_url
-      } : null);
+      setCategory(task.category_id ? { category_id: task.category_id, name: task.category_name, color: task.category_color } : null);
       setDueDate(task.due_date ? new Date(task.due_date) : new Date());
       setDueTime(task.due_time ? new Date(`1970-01-01T${task.due_time}`) : new Date());
     } else {
@@ -120,7 +119,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Home</Text>
+        <Text style={styles.headerText}>Index</Text>
         <TouchableOpacity>
           <Ionicons name="person-circle-outline" size={32} color="#fff" />
         </TouchableOpacity>
@@ -162,16 +161,13 @@ export default function HomeScreen() {
               </TouchableOpacity>
               <View style={{ flex: 1 }}>
                 <Text style={styles.taskTitle}>{item.title}</Text>
-                {item.description ? <Text style={styles.taskDesc}>{item.description}</Text> : null}
+                <Text style={styles.taskDesc}>{item.description}</Text>
                 <Text style={styles.taskMeta}>
-                  Due: {item.due_date} {item.due_time}
+                  {item.due_date} {item.due_time}
                 </Text>
               </View>
-              {item.category_id && (
-                <View style={[styles.labelTag, { backgroundColor: item.category_color || "#fff" }]}>
-                  {item.category_image_url && (
-                    <Image source={{ uri: item.category_image_url }} style={{ width: 22, height: 22, marginRight: 2, borderRadius: 6 }} />
-                  )}
+              {item.category_name && (
+                <View style={[styles.labelTag, { backgroundColor: item.category_color || "#333" }]}>
                   <Text style={styles.labelText}>{item.category_name}</Text>
                 </View>
               )}
@@ -211,7 +207,7 @@ export default function HomeScreen() {
             <Text style={styles.modalTitle}>{editMode ? "Edit Task" : "Add Task"}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Title"
+              placeholder="Task Title"
               value={title}
               onChangeText={setTitle}
               placeholderTextColor="#aaa"
@@ -223,38 +219,101 @@ export default function HomeScreen() {
               onChangeText={setDescription}
               placeholderTextColor="#aaa"
             />
-            {/* Category Picker */}
-            <TouchableOpacity onPress={() => setShowCategoryPicker(true)} style={styles.catBox}>
-              <Text style={{ color: "#fff" }}>
-                {category ? category.name : "Choose Category"}
-              </Text>
-              {category?.image_url && (
-                <Image source={{ uri: category.image_url }} style={{ width: 22, height: 22, marginLeft: 8, borderRadius: 6 }} />
-              )}
-            </TouchableOpacity>
-            {showCategoryPicker && (
-              <Modal visible animationType="fade" transparent>
-                <View style={styles.modalOverlay}>
+            <View style={styles.row}>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <Ionicons name="calendar-outline" size={24} color="#8875FF" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                <Ionicons name="alarm-outline" size={24} color="#8875FF" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowPriorityPicker(true)}>
+                <Ionicons name="flag" size={24} color="#8875FF" />
+                <Text style={{ color: "#fff", marginLeft: 4 }}>{priority}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowCategoryPicker(true)}>
+                <View style={[styles.catBox, { backgroundColor: category?.color || "#333" }]}>
+                  <Text style={{ color: "#181818", fontWeight: "bold" }}>{category?.name || "Category"}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/* Date Picker */}
+            {showDatePicker && (
+              <DateTimePicker
+                value={dueDate}
+                mode="date"
+                display="default"
+                onChange={(e, date) => {
+                  setShowDatePicker(false);
+                  if (date) setDueDate(date);
+                }}
+              />
+            )}
+            {/* Time Picker */}
+            {showTimePicker && (
+              <DateTimePicker
+                value={dueTime}
+                mode="time"
+                display="default"
+                onChange={(e, time) => {
+                  setShowTimePicker(false);
+                  if (time) setDueTime(time);
+                }}
+              />
+            )}
+            {/* Category Picker Modal */}
+            <Modal visible={showCategoryPicker} animationType="fade" transparent>
+              <Pressable style={styles.modalOverlay} onPress={() => setShowCategoryPicker(false)}>
+                <View style={{ width: "90%" }}>
                   <CategoryPicker
-                    selectedCategory={category}
                     onSelect={cat => {
                       setCategory(cat);
                       setShowCategoryPicker(false);
                     }}
+                    selectedCategory={category}
                   />
                   <TouchableOpacity onPress={() => setShowCategoryPicker(false)}>
                     <Text style={{ color: "#fff", marginTop: 12, alignSelf: "center" }}>Close</Text>
                   </TouchableOpacity>
                 </View>
-              </Modal>
-            )}
-            {/* ...other fields and actions... */}
+              </Pressable>
+            </Modal>
+            {/* Priority Picker */}
+            <Modal visible={showPriorityPicker} transparent animationType="fade">
+              <View style={styles.priorityOverlay}>
+                <View style={styles.priorityBox}>
+                  <Text style={styles.modalTitle}>Task Priority</Text>
+                  <View style={styles.priorityGrid}>
+                    {[...Array(10)].map((_, i) => (
+                      <Pressable
+                        key={i + 1}
+                        style={[
+                          styles.priorityCell,
+                          priority === i + 1 && styles.priorityCellActive,
+                        ]}
+                        onPress={() => setPriority(i + 1)}
+                      >
+                        <Ionicons name="flag" size={20} color={priority === i + 1 ? "#fff" : "#8875FF"} />
+                        <Text style={{ color: priority === i + 1 ? "#fff" : "#8875FF", fontWeight: "bold" }}>{i + 1}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                  <View style={styles.modalActions}>
+                    <TouchableOpacity onPress={() => setShowPriorityPicker(false)}>
+                      <Text style={styles.cancelBtn}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.saveBtn} onPress={() => setShowPriorityPicker(false)}>
+                      <Text style={styles.saveBtnText}>Save</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
             <View style={styles.modalActions}>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Text style={styles.cancelBtn}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.saveBtn} onPress={handleAddOrUpdateTask}>
-                <Text style={styles.saveBtnText}>{editMode ? "Update" : "Add"}</Text>
+                <Text style={styles.saveBtnText}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -263,6 +322,8 @@ export default function HomeScreen() {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#181818" },
@@ -326,11 +387,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     marginLeft: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 2,
   },
-  labelText: { color: "#181818", fontSize: 13, fontWeight: "bold", marginLeft: 2 },
+  labelText: { color: "#181818", fontSize: 13, fontWeight: "bold" },
   priorityTag: {
     flexDirection: "row",
     alignItems: "center",
@@ -383,12 +441,43 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 8,
     backgroundColor: "#333",
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 8,
   },
   modalActions: { flexDirection: "row", justifyContent: "flex-end", marginTop: 18, gap: 18 },
   cancelBtn: { color: "#aaa", fontSize: 16 },
   saveBtn: { backgroundColor: "#8875FF", borderRadius: 8, padding: 10 },
   saveBtnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  priorityOverlay: {
+    flex: 1,
+    backgroundColor: "#000a",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  priorityBox: {
+    backgroundColor: "#222",
+    borderRadius: 16,
+    padding: 24,
+    width: "80%",
+    elevation: 8,
+  },
+  priorityGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    justifyContent: "center",
+    marginVertical: 12,
+  },
+  priorityCell: {
+    width: 48,
+    height: 48,
+    backgroundColor: "#333",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 4,
+    flexDirection: "column",
+    gap: 2,
+  },
+  priorityCellActive: {
+    backgroundColor: "#8875FF",
+  },
 });
