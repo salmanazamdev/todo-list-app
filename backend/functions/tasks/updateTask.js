@@ -2,7 +2,7 @@ const pool = require('../../database/database');
 
 const updateTask = async (req, res) => {
   const { taskId } = req.params;
-  const { title, description, dueDate, dueTime, priority, completed, label } = req.body;
+  const { title, description, dueDate, dueTime, priority, completed, category_id } = req.body;
 
   try {
     const result = await pool.query(
@@ -13,11 +13,11 @@ const updateTask = async (req, res) => {
            due_time = $4,
            priority = $5,
            completed = $6,
-           label = $7,
+           category_id = $7,
            updated_at = CURRENT_TIMESTAMP
        WHERE task_id = $8
        RETURNING *`,
-      [title, description, dueDate, dueTime, priority, completed, label, taskId]
+      [title, description, dueDate, dueTime, priority, completed, category_id, taskId]
     );
 
     if (result.rows.length === 0) {
