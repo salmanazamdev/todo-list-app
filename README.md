@@ -1,6 +1,3 @@
-Perfect 👍 got it. Here’s your updated README with just an **App Logo** section added (without changing anything else).
-
-````markdown
 # ✅ AchieveIt – ToDo List Application (React Native)
 
 AchieveIt is a powerful and elegant ToDo List application built with **React Native**.  
