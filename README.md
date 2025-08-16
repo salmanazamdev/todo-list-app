@@ -7,7 +7,7 @@ It goes beyond just task management — helping you stay productive with smart f
 
 ## 🖼️ App Logo
 
-![App Logo](/frontend/assets/images/screenshots/applogo.png)
+![App Logo](/frontend/assets/images/screenshots/applogo.png) size 200x200
 
 ---
 
