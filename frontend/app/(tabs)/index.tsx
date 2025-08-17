@@ -214,65 +214,11 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.task_id?.toString()}
         renderItem={({ item }) => (
           <View style={styles.taskCard}>
-            <View style={styles.taskCardRow}>
-              {/* Completion dot */}
-              <TouchableOpacity
-                onPress={() => {
-                  setTaskToComplete(item);
-                  setShowCompleteModal(true);
-                }}
-              >
-                <Ionicons
-                  name={item.completed ? "checkmark-circle" : "ellipse-outline"}
-                  size={22}
-                  color={item.completed ? "#8875FF" : "#aaa"}
-                />
-              </TouchableOpacity>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.taskTitle}>{item.title}</Text>
-                {/* Date/Time with correct color */}
-                <Text style={styles.taskMetaFixed}>
-                  {formatTaskDate(item.due_date, item.due_time)}
-                </Text>
-              </View>
-              {/* Category pill */}
-              {(item.category_name || (item.category && item.category.name)) && (
-                <View
-                  style={[
-                    styles.labelTag,
-                    {
-                      backgroundColor:
-                        item.category_color ||
-                        (item.category && item.category.color) ||
-                        "#333",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    },
-                  ]}
-                >
-                  {(item.category_image_url ||
-                    (item.category && item.category.image_url)) && (
-                    <Image
-                      source={{
-                        uri:
-                          item.category_image_url ||
-                          (item.category && item.category.image_url),
-                      }}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        marginRight: 4,
-                        borderRadius: 4,
-                      }}
-                    />
-                  )}
-                  <Text style={styles.labelText}>
-                    {item.category_name ||
-                      (item.category && item.category.name)}
-                  </Text>
-                </View>
-              )}
-              {/* Priority pill */}
+            <Text style={styles.taskTitle}>{item.title}</Text>
+            <Text style={styles.taskMetaFixed}>
+              {formatTaskDate(item.due_date, item.due_time)}
+            </Text>
+            <View style={styles.taskCardRowIcons}>
               <View style={styles.priorityTag}>
                 <Ionicons name="flag" size={16} color="#8875FF" />
                 <Text style={styles.priorityText}>{item.priority}</Text>
@@ -293,7 +239,58 @@ export default function HomeScreen() {
                   style={{ marginLeft: 8 }}
                 />
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setTaskToComplete(item);
+                  setShowCompleteModal(true);
+                }}
+              >
+                <Ionicons
+                  name={item.completed ? "checkmark-circle" : "ellipse-outline"}
+                  size={22}
+                  color={item.completed ? "#8875FF" : "#aaa"}
+                  style={{ marginLeft: 8 }}
+                />
+              </TouchableOpacity>
             </View>
+            {(item.category_name || (item.category && item.category.name)) && (
+              <View
+                style={[
+                  styles.labelTag,
+                  {
+                    backgroundColor:
+                      item.category_color ||
+                      (item.category && item.category.color) ||
+                      "#333",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 8,
+                    alignSelf: "flex-start",
+                  },
+                ]}
+              >
+                {(item.category_image_url ||
+                  (item.category && item.category.image_url)) && (
+                  <Image
+                    source={{
+                      uri:
+                        item.category_image_url ||
+                        (item.category && item.category.image_url),
+                    }}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      marginRight: 4,
+                      borderRadius: 4,
+                    }}
+                  />
+                )}
+                <Text style={styles.labelText}>
+                  {item.category_name ||
+                    (item.category && item.category.name)}
+                </Text>
+              </View>
+            )}
           </View>
         )}
         ListEmptyComponent={
@@ -544,9 +541,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginVertical: 8,
   },
-  taskCardRow: {
+  taskCardRowIcons: {
     flexDirection: "row",
     alignItems: "center",
+    marginTop: 10,
     gap: 8,
   },
   taskTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
@@ -558,7 +556,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
-    marginLeft: 8,
+    marginLeft: 0,
     flexDirection: "row",
     alignItems: "center",
     gap: 2,
@@ -571,7 +569,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    marginLeft: 8,
+    marginLeft: 0,
     borderWidth: 1,
     borderColor: "#8875FF",
   },
