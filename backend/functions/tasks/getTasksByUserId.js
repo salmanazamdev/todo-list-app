@@ -5,7 +5,14 @@ const getTasksByUserId = async (req, res) => {
 
   try {
     const result = await pool.query(`
-      SELECT * FROM tasks WHERE user_id = $1
+      SELECT 
+        t.*, 
+        c.name AS category_name, 
+        c.color AS category_color, 
+        c.image_url AS category_image_url
+      FROM tasks t
+      LEFT JOIN categories c ON t.category_id = c.category_id
+      WHERE t.user_id = $1
     `, [userId]);
 
     res.status(200).json({ tasks: result.rows });
