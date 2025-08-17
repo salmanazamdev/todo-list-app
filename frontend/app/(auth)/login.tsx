@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IP_ADDRESS } from "@/constants/endpoint";
-
+import * as LocalAuthentication from "expo-local-authentication";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("abc");
-  const [password, setPassword] = useState("abc");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showFingerprintModal, setShowFingerprintModal] = useState(false);
+  const [fingerprintStatus, setFingerprintStatus] = useState<"idle" | "success" | "fail">("idle");
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -32,6 +34,44 @@ export default function Login() {
     } catch (error) {
       console.error(error);
       alert("Something went wrong. Please try again.");
+    }
+  };
+
+  const handleFingerprintLogin = async () => {
+    setShowFingerprintModal(true);
+    setFingerprintStatus("idle");
+    const registered = await AsyncStorage.getItem("fingerprintRegistered");
+    if (!registered) {
+      setFingerprintStatus("fail");
+      return;
+    }
+    const compatible = await LocalAuthentication.hasHardwareAsync();
+    if (!compatible) {
+      setFingerprintStatus("fail");
+      return;
+    }
+    const enrolled = await LocalAuthentication.isEnrolledAsync();
+    if (!enrolled) {
+      setFingerprintStatus("fail");
+      return;
+    }
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Login with your fingerprint",
+    });
+    if (result.success) {
+      // For demo: retrieve userId from AsyncStorage and log in
+      const userId = await AsyncStorage.getItem("userId");
+      if (userId) {
+        setFingerprintStatus("success");
+        setTimeout(() => {
+          setShowFingerprintModal(false);
+          router.push("/(tabs)");
+        }, 1000);
+      } else {
+        setFingerprintStatus("fail");
+      }
+    } else {
+      setFingerprintStatus("fail");
     }
   };
 
@@ -70,6 +110,10 @@ export default function Login() {
           <Text style={styles.loginBtnText}>Login</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity style={[styles.loginBtn, { backgroundColor: "#232323", marginTop: 10 }]} onPress={handleFingerprintLogin}>
+          <Text style={styles.loginBtnText}>Login with Fingerprint</Text>
+        </TouchableOpacity>
+
         <View style={styles.dividerRow}>
           <View style={styles.divider} />
           <Text style={styles.orText}>or</Text>
@@ -84,7 +128,6 @@ export default function Login() {
           <Image source={require("@/assets/images/applewhite.png")} style={styles.icon} />
           <Text style={styles.socialText}>Login with Apple</Text>
         </TouchableOpacity>
-
       </View>
 
       <View style={styles.footer}>
@@ -93,6 +136,49 @@ export default function Login() {
           <Text style={styles.link} onPress={() => router.push("/(auth)/signup")}>Register</Text>
         </Text>
       </View>
+
+      {/* Fingerprint Modal */}
+      <Modal visible={showFingerprintModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Ionicons
+              name="finger-print"
+              size={60}
+              color={
+                fingerprintStatus === "success"
+                  ? "#4CAF50"
+                  : fingerprintStatus === "fail"
+                  ? "#F44336"
+                  : "#fff"
+              }
+              style={{ alignSelf: "center", marginBottom: 16 }}
+            />
+            {fingerprintStatus === "idle" && (
+              <Text style={styles.modalText}>
+                Please hold your finger at the fingerprint scanner to verify your identity
+              </Text>
+            )}
+            {fingerprintStatus === "success" && (
+              <Text style={[styles.modalText, { color: "#4CAF50" }]}>
+                Login successful!
+              </Text>
+            )}
+            {fingerprintStatus === "fail" && (
+              <Text style={[styles.modalText, { color: "#F44336" }]}>
+                Your fingerprint is not matched. Please try again later!!!
+              </Text>
+            )}
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 24 }}>
+              <TouchableOpacity onPress={() => setShowFingerprintModal(false)}>
+                <Text style={styles.cancelBtn}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowFingerprintModal(false)}>
+                <Text style={styles.saveBtnText}>Use Password</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -204,4 +290,25 @@ icon: {
   link: {
     color: "#ffffffff",
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "#000a",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalBox: {
+    backgroundColor: "#232323",
+    borderRadius: 16,
+    padding: 32,
+    width: "85%",
+    alignItems: "center",
+  },
+  modalText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 12,
+  },
+  cancelBtn: { color: "#aaa", fontSize: 16, marginRight: 24 },
+  saveBtnText: { color: "#8875FF", fontWeight: "bold", fontSize: 16 },
 });
