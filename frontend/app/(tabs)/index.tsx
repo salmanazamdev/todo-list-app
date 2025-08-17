@@ -214,31 +214,8 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.task_id?.toString()}
         renderItem={({ item }) => (
           <View style={styles.taskCard}>
-            <Text style={styles.taskTitle}>{item.title}</Text>
-            <Text style={styles.taskMetaFixed}>
-              {formatTaskDate(item.due_date, item.due_time)}
-            </Text>
-            <View style={styles.taskCardRowIcons}>
-              <View style={styles.priorityTag}>
-                <Ionicons name="flag" size={16} color="#8875FF" />
-                <Text style={styles.priorityText}>{item.priority}</Text>
-              </View>
-              <TouchableOpacity onPress={() => openTaskModal(item)}>
-                <Ionicons
-                  name="create-outline"
-                  size={20}
-                  color="#aaa"
-                  style={{ marginLeft: 8 }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDeleteTask(item.task_id)}>
-                <Ionicons
-                  name="trash-outline"
-                  size={20}
-                  color="#F76A6A"
-                  style={{ marginLeft: 8 }}
-                />
-              </TouchableOpacity>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* Completion dot */}
               <TouchableOpacity
                 onPress={() => {
                   setTaskToComplete(item);
@@ -249,48 +226,78 @@ export default function HomeScreen() {
                   name={item.completed ? "checkmark-circle" : "ellipse-outline"}
                   size={22}
                   color={item.completed ? "#8875FF" : "#aaa"}
-                  style={{ marginLeft: 8 }}
+                  style={{ marginRight: 10 }}
                 />
               </TouchableOpacity>
-            </View>
-            {(item.category_name || (item.category && item.category.name)) && (
-              <View
-                style={[
-                  styles.labelTag,
-                  {
-                    backgroundColor:
-                      item.category_color ||
-                      (item.category && item.category.color) ||
-                      "#333",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 8,
-                    alignSelf: "flex-start",
-                  },
-                ]}
-              >
-                {(item.category_image_url ||
-                  (item.category && item.category.image_url)) && (
-                  <Image
-                    source={{
-                      uri:
-                        item.category_image_url ||
-                        (item.category && item.category.image_url),
-                    }}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      marginRight: 4,
-                      borderRadius: 4,
-                    }}
-                  />
-                )}
-                <Text style={styles.labelText}>
-                  {item.category_name ||
-                    (item.category && item.category.name)}
+              <View style={{ flex: 1 }}>
+                <Text style={styles.taskTitle}>{item.title}</Text>
+                <Text style={styles.taskMetaFixed}>
+                  {formatTaskDate(item.due_date, item.due_time)}
                 </Text>
               </View>
-            )}
+              <View style={{ flex: 0 }}>
+                {/* Icon row, left-aligned */}
+                <View style={styles.iconRow}>
+                  <View style={styles.priorityTag}>
+                    <Ionicons name="flag" size={16} color="#8875FF" />
+                    <Text style={styles.priorityText}>{item.priority}</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => openTaskModal(item)}>
+                    <Ionicons
+                      name="create-outline"
+                      size={20}
+                      color="#aaa"
+                      style={{ marginLeft: 8 }}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleDeleteTask(item.task_id)}>
+                    <Ionicons
+                      name="trash-outline"
+                      size={20}
+                      color="#F76A6A"
+                      style={{ marginLeft: 8 }}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {/* Category pill below icons */}
+                {(item.category_name || (item.category && item.category.name)) && (
+                  <View
+                    style={[
+                      styles.labelTag,
+                      {
+                        backgroundColor:
+                          item.category_color ||
+                          (item.category && item.category.color) ||
+                          "#333",
+                        marginTop: 8,
+                        alignSelf: "flex-start",
+                      },
+                    ]}
+                  >
+                    {(item.category_image_url ||
+                      (item.category && item.category.image_url)) && (
+                      <Image
+                        source={{
+                          uri:
+                            item.category_image_url ||
+                            (item.category && item.category.image_url),
+                        }}
+                        style={{
+                          width: 18,
+                          height: 18,
+                          marginRight: 4,
+                          borderRadius: 4,
+                        }}
+                      />
+                    )}
+                    <Text style={styles.labelText}>
+                      {item.category_name ||
+                        (item.category && item.category.name)}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
           </View>
         )}
         ListEmptyComponent={
@@ -541,11 +548,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginVertical: 8,
   },
-  taskCardRowIcons: {
+  iconRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
-    gap: 8,
+    marginTop: 0,
+    gap: 3.5,
   },
   taskTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
   taskDesc: { color: "#aaa", fontSize: 15, marginTop: 4 },
@@ -615,7 +622,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     backgroundColor: "#333",
   },
-  modalActions: { flexDirection: "row", justifyContent: "flex-end", marginTop: 18, gap: 18 },
+  modalActions: { flexDirection: "row", justifyContent: "flex-end", marginTop: 18, gap: 18, alignItems:"center" },
   cancelBtn: { color: "#aaa", fontSize: 16 },
   saveBtn: { backgroundColor: "#8875FF", borderRadius: 8, padding: 10 },
   saveBtnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
