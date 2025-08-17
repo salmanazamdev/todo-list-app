@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "bold",
         color: "white",
-        marginBottom: 30,
+        marginBottom: 16,
         alignSelf: "flex-start",
     },
     label: {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
         padding: 14,
         borderRadius: 8,
         alignItems: "center",
-        marginTop: 30,
+        marginTop: 20,
     },
     loginBtnText: {
         color: "#fff",
@@ -267,6 +267,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         fontSize: 14,
         color: "#aaa",
+        marginTop: -5,
+        marginBottom: -5,
     },
     socialBtn: {
         width: "100%",
