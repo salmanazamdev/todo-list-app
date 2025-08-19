@@ -25,9 +25,9 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
       }}>
       <Tabs.Screen
-        name="index"
+        name="Home"
         options={{
-          title: 'Index',
+          title: '',
           tabBarIcon: ({ color }) => <Octicons name="home" size={24} color={color} />,
         }}
       />

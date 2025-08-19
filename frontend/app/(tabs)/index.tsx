@@ -170,7 +170,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Index</Text>
+        <Text style={styles.headerText}>Home</Text>
         <TouchableOpacity>
           <Ionicons name="person-circle-outline" size={32} color="#fff" />
         </TouchableOpacity>
