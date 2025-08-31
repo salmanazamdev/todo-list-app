@@ -13,7 +13,7 @@ log.txt
 # macOS system files
 .DS_Store
 
-# VS Code settings
+# VS Code Settings
 .vscode/
 
 # Expo / React Native specific
