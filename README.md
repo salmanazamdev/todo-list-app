@@ -77,7 +77,7 @@ Start Docker services:
 docker compose up -d
 ```
 
-Create and seed the database:
+First create and then seed the database:
 
 ```sh
 docker exec -i todo-api-container psql -U root -d postgres -c "CREATE DATABASE todo_db;"
